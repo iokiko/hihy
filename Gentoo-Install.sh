@@ -990,13 +990,16 @@ function hyCoreNotify(){
 
 
 function checkStatus(){
-
-	status=`systemctl is-active hihy`
-    if [ "${status}" = "active" ];then
-		echoColor green "hysteria正常运行"
-	else
-		echoColor red "Dead!hysteria未正常运行!"
-	fi
+    if grep </etc/issue -q -i "gentoo" && [[ -f "/etc/issue" ]] || grep </proc/version -q -i "gentoo"; then
+        status=`rc-service hihy status`
+    else
+	    status=`systemctl is-active hihy`
+    fi
+    if [[ "${status}" = "active" || "${status}" =~ " * status: started" ]]; then
+        echoColor green "hysteria正常运行"
+    else
+        echoColor red "Dead!hysteria未正常运行!"
+    fi
 }
 
 function install()
@@ -1564,8 +1567,8 @@ function start(){
         rc-service hihy start
         echoColor purple "start..."
         sleep 5
-        status=`rc-service hihy status`
-        if [ "${status}" = "started" ];then
+        status=`rc-service hihy start`
+        if [ "${status}" = " * status: started" ];then
             echoColor green "启动成功"
         else
             echoColor red "启动失败"
@@ -1602,8 +1605,8 @@ function restart(){
         rc-service hihy restart
         echoColor purple "restart..."
         sleep 5
-        status=`rc-service hihy status`
-        if [ "${status}" = "started" ];then
+        status=`rc-service hihy restart`
+        if [ "${status}" = " * status: started" ];then
 		    echoColor green "重启成功"
         else
             echoColor red "重启失败"
