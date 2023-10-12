@@ -738,13 +738,13 @@ EOF
 EOF
     fi
     if grep </etc/issue -q -i "gentoo" && [[ -f "/etc/issue" ]] || grep </proc/version -q -i "gentoo"; then
-    touch /etc/sysctl.d/sysctl.conf
-    cat <<EOF > /etc/sysctl.d/sysctl.conf
+    touch /usr/lib/sysctl.d/99-sysctl.conf
+    cat <<EOF > /usr/lib/sysctl.d/99-sysctl.conf
 net.core.rmem_max=80000000
 net.ipv4.ip_forward=1
 net.ipv6.conf.all.forwarding=1
 EOF
-    sysctl --server
+    sysctl --system
     else
 	    sysctl -w net.core.rmem_max=80000000
     fi
