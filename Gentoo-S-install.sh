@@ -148,7 +148,7 @@ function printMsg(){
 
 function hihy(){
 	if [ ! -f "/usr/bin/hihy" ]; then
-  		wget -q -O /usr/bin/hihy --no-check-certificate https://raw.githubusercontent.com/emptysuns/Hi_Hysteria/main/server/install.sh
+  		wget -q -O /usr/bin/hihy --no-check-certificate https://raw.githubusercontent.com/iokiko/hihy/main/Gentoo-S-install.sh
 		chmod +x /usr/bin/hihy
 	fi	
 }
