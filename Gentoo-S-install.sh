@@ -739,6 +739,12 @@ EOF
     fi
     if grep </etc/issue -q -i "gentoo" && [[ -f "/etc/issue" ]] || grep </proc/version -q -i "gentoo"; then
     touch /usr/lib/sysctl.d/99-sysctl.conf
+    mkdir -p /etc/modules-load.d/
+    mkdir -p /etc/sysctl.d/
+    echo "tcp_bbr" > /etc/modules-load.d/80-bbr.conf
+    echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.d/80-bbr.conf
+    echo "net.core.default_qdisc=fq" >> /etc/sysctl.d/80-bbr.conf
+    sysctl -p /etc/sysctl.d/80-bbr.conf
     cat <<EOF > /usr/lib/sysctl.d/99-sysctl.conf
 net.core.rmem_max=80000000
 net.ipv4.ip_forward=1
