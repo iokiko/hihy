@@ -1028,9 +1028,21 @@ depend() {
 
 start() {
     ebegin "Starting hihy"
-    start-stop-daemon --start --exec /etc/hihy/bin/appS -- --log-level info -c /etc/hihy/conf/hihyServer.json server
+    start-stop-daemon --start --background --exec /etc/hihy/bin/appS -- --log-level info -c /etc/hihy/conf/hihyServer.json server
     eend $?
 }
+
+stop() {
+    ebegin "Stopping hihy"
+    start-stop-daemon --stop --exec /etc/hihy/bin/appS
+    eend $?
+}
+
+restart() {
+    svc_stop
+    svc_start
+}
+
 
 EOF
     chmod +x /etc/init.d/hihy
