@@ -1028,7 +1028,8 @@ depend() {
 
 start() {
     ebegin "Starting hihy"
-    start-stop-daemon --start --background --exec /etc/hihy/bin/appS -- --log-level info -c /etc/hihy/conf/hihyServer.json server
+    start-stop-daemon --start --background --exec /etc/hihy/bin/appS -- \
+      --log-level info -c /etc/hihy/conf/hihyServer.json server >> /var/log/hihy.log 2>&1
     eend $?
 }
 
@@ -1045,8 +1046,25 @@ restart() {
 
 
 EOF
+    cat <<EOF >>/etc/syslog-ng/syslog-ng.conf
+destination d_hihy {
+    file("/var/log/hihy.log");
+};
+
+filter f_hihy {
+    facility(local7) and program("hihy");
+};
+
+log {
+    source(src);
+    filter(f_hihy);
+    destination(d_hihy);
+};
+EOF
+
     chmod +x /etc/init.d/hihy
     rc-update add hihy default
+    rc-service syslog-ng restart
     else
         cat <<EOF >/etc/systemd/system/hihy.service
 [Unit]
